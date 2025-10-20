@@ -210,22 +210,61 @@
             background-color: #f5f8fc;
         }
 
-        /* Lista de Verificación Mejorada */
+        /* --- INICIO DE ESTILOS DE SECCIÓN 7 MEJORADA --- */
+        .checklist-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 2rem;
+        }
+
+        .checklist-category-card {
+            background-color: #f9fbfd;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .checklist-category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
+        }
+
+        .checklist-category-card h3 {
+            font-size: 1.3rem;
+            color: var(--heading-color);
+            margin-top: 0;
+            margin-bottom: 1rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .checklist-category-card h3 .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        /* Ajustes a la lista de verificación dentro de las tarjetas */
         .checklist {
             list-style-type: none;
             padding-left: 0;
         }
         
         .checklist li {
-            font-size: 1.05rem;
+            font-size: 0.95rem; /* Un poco más pequeño para caber bien */
             margin-bottom: 12px;
             display: flex;
-            align-items: center;
+            align-items: flex-start; /* Alinear con el inicio del texto */
+            line-height: 1.4;
         }
         
         .checklist label {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             cursor: pointer;
         }
 
@@ -239,24 +278,16 @@
         /* Crear un checkbox personalizado */
         .checklist label::before {
             content: '';
-            width: 20px;
-            height: 20px;
+            width: 18px; /* Un poco más pequeño */
+            height: 18px;
             border: 2px solid var(--secondary-color);
             border-radius: 4px;
             margin-right: 12px;
+            flex-shrink: 0; /* Evitar que se encoja */
+            margin-top: 2px; /* Alinear con el texto */
             transition: all 0.2s;
         }
-
-        /* Estilo para cuando está "marcado" (no funcional, solo visual) */
-        /* .checklist input:checked + label::before {
-            background-color: var(--secondary-color);
-            content: '\2713'; /* Checkmark */
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        } */
+        /* --- FIN DE ESTILOS DE SECCIÓN 7 MEJORADA --- */
 
 
         footer {
@@ -403,7 +434,7 @@
                 <ul>
                     <li><strong>Aumento de Costos de Software:</strong> El trabajo que estaba destinado a ser "gratuito" (desde la perspectiva de licenciamiento) ahora se ejecuta en CPs facturables, consumiendo MSUs y aumentando los costos de MLC.</li>
                     <li><strong>Aumento de la Contención de CP:</strong> Este trabajo de desbordamiento ahora compite directamente con el trabajo crítico que *debe* ejecutarse en CPs (como CICS, Db2 y la E/S de red).</li>
-                    <li><strong>Degradación del Rendimiento:</strong> El trabajo desbordado perjudica activamente el rendimiento de toda la LPAR. Ralentiza el SoR de backend, lo que a su vez retiene la solicitud de z/OS Connect por más tiempo, exacerbando el problema en un ciclo de retroalimentación de degradación.</li>
+                    <li><strong>DegradACIÓN del Rendimiento:</strong> El trabajo desbordado perjudica activamente el rendimiento de toda la LPAR. Ralentiza el SoR de backend, lo que a su vez retiene la solicitud de z/OS Connect por más tiempo, exacerbando el problema en un ciclo de retroalimentación de degradación.</li>
                 </ul>
 
                 <h3>Escenario 2: Escasez de CP y el Efecto "Bottleneck" (Cuello de Botella)</h3>
@@ -541,7 +572,7 @@
                                 <tr>
                                     <td><code>TIME_ZC_ENTRY</code></td>
                                     <td>Llegada de la solicitud a z/OS Connect.</td>
-                                    <td rowspan:"4" style="vertical-align: middle;">
+                                    <td rowspan="4" style="vertical-align: middle;">
                                         <strong>Tiempo en SoR</strong> = <code>TIME_SOR_RECV</code> - <code>TIME_SOR_SENT</code><br><br>
                                         <strong>Tiempo total en z/OS Connect</strong> = <code>TIME_ZC_EXIT</code> - <code>TIME_ZC_ENTRY</code><br><br>
                                         <strong>Tiempo de procesamiento en z/OS Connect</strong> = (Tiempo total) - (Tiempo en SoR)
@@ -630,51 +661,67 @@
                 <h2>Sección 7: Lista de Verificación Accionable</h2>
                 <p>Utilice esta lista de verificación como guía estratégica para la gestión proactiva del rendimiento de z/OS Connect.</p>
                 
-                <h4>VALIDAR: Configuración de WLM</h4>
-                <ul class="checklist">
-                    <li><label><input type="checkbox"> Confirmar que <code>zosWlm-1.0</code> está activa en server.xml.</label></li>
-                    <li><label><input type="checkbox"> Asegurar que existan reglas de <code>httpClassification</code> para las cargas de trabajo (ej. <code>/zosConnect/apiRequesters/*</code>), asignándolas a una clase de transacción única.</label></li>
-                    <li><label><input type="checkbox"> Verificar que la política de WLM clasifica correctamente la STC de z/OS Connect y los enclaves (CB) en clases de servicio distintas y apropiadas (usar objetivos de velocidad, no discrecionales).</label></li>
-                    <li><label><input type="checkbox"> Verificar que la importancia del SoR (CICS/IMS) es <strong>mayor</strong> que la de z/OS Connect (para flujos de Provider).</label></li>
-                </ul>
-
-                <h4>MEDIR: Establecer Líneas Base de Rendimiento</h4>
-                <ul class="checklist">
-                    <li><label><input type="checkbox"> Habilitar la recolección de registros SMF 123 (Subtipo 2 Versión 2 para Requester: <code>apiRequesterSmfVersion="2"</code>).</label></li>
-                    <li><label><input type="checkbox"> Recopilar y archivar regularmente datos de RMF (SMF 70, 72) y registros SMF 123.</label></li>
-                    <li><label><input type="checkbox"> Establecer líneas base para <code>Tiempo en z/OS Connect</code> (SMF 123), <code>% CPU DLY</code> (SMF 72) y <code>% IIPCP</code> (SMF 72) durante períodos pico y normales.</label></li>
-                </ul>
-
-                <h4>MONITORIZAR: Implementar Alertas en Tiempo Real</h4>
-                <ul class="checklist">
-                    <li><label><input type="checkbox"> Utilizar un monitor en tiempo real (ej. RMF III, OMEGAMON for JVM).</label></li>
-                    <li><label><input type="checkbox"> Configurar alertas para <code>% zIIP en CP</code> (Advertencia > 10%, Crítico > 50%).</label></li>
-                    <li><label><input type="checkbox"> Configurar alertas para Tiempo de Respuesta Promedio (Crítico > 2x la línea base).</label></li>
-                    <li><label><input type="checkbox"> Configurar alertas para Recuento de Hebras Activas (Advertencia > 80% del máximo).</label></li>
-                </ul>
-
-                <h4>DIAGNOSTICAR: Analizar Anomalías</h4>
-                <ul class="checklist">
-                    <li><label><input type="checkbox"> Al ocurrir un problema, correlacionar el <code>Tiempo en z/OS Connect</code> (SMF 123) con <code>% CPU DLY</code> y <code>% IIPCP</code> (RMF 72) para ese intervalo.</label></li>
-                    <li><label><input type="checkbox"> Usar la "Matriz de Contención" (Sección 5) para determinar si el cuello de botella es de CP, de zIIP, de ambos o de otro tipo.</label></li>
-                </ul>
-
-                <h4>AJUSTAR: Optimizar el Entorno</h4>
-                <ul class="checklist">
-                    <li><label><input type="checkbox"> Revisar y optimizar la política de WLM (ver "VALIDAR").</label></li>
-                    <li><label><input type="checkbox"> (Para Requester) Habilitar <code>AsyncIO</code> para Liberty.</label></li>
-                    <li><label><input type="checkbox"> (Para Requester) Revisar parámetros de TCP/IP (<code>DELAYACKS</code>, Búferes).</label></li>
-                    <li><label><input type="checkbox"> (Para Provider) Optimizar payloads de API (excluir campos, usar ODO).</label></li>
-                </ul>
-
-                <h4>PLANIFICAR: Impulsar la Capacidad</h4>
-                <ul class="checklist">
-                    <li><label><input type="checkbox"> Usar tendencias históricas de <code>% IIPCP</code> para pronosticar necesidades de zIIP.</label></li>
-                    <li><label><input type="checkbox"> Usar tendencias de <code>% CPU DLY</code> para evaluar la capacidad de CP.</label></li>
-                    <li><label><input type="checkbox"> Traducir <code>% IIPCP</code> en impacto de costo de MLC para justificar la adquisición de hardware.</label></li>
-                </ul>
+                <div class="checklist-container">
+                    
+                    <div class="checklist-category-card">
+                        <h3><span class="icon">🔍</span> VALIDAR: Configuración de WLM</h3>
+                        <ul class="checklist">
+                            <li><label><input type="checkbox"> Confirmar que <code>zosWlm-1.0</code> está activa en server.xml.</label></li>
+                            <li><label><input type="checkbox"> Asegurar que existan reglas de <code>httpClassification</code> para las cargas de trabajo (ej. <code>/zosConnect/apiRequesters/*</code>).</label></li>
+                            <li><label><input type="checkbox"> Verificar que la política de WLM clasifica correctamente la STC y los enclaves (CB) en clases de servicio apropiadas (usar objetivos de velocidad).</label></li>
+                            <li><label><input type="checkbox"> Verificar que la importancia del SoR (CICS/IMS) es <strong>mayor</strong> que la de z/OS Connect (para flujos de Provider).</label></li>
+                        </ul>
+                    </div>
+            
+                    <div class="checklist-category-card">
+                        <h3><span class="icon">📏</span> MEDIR: Establecer Líneas Base</h3>
+                        <ul class="checklist">
+                            <li><label><input type="checkbox"> Habilitar registros SMF 123 (V2 para Requester: <code>apiRequesterSmfVersion="2"</code>).</label></li>
+                            <li><label><input type="checkbox"> Recopilar y archivar regularmente datos de RMF (SMF 70, 72) y SMF 123.</label></li>
+                            <li><label><input type="checkbox"> Establecer líneas base para <code>Tiempo en z/OS Connect</code>, <code>% CPU DLY</code> y <code>% IIPCP</code> durante picos.</label></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="checklist-category-card">
+                        <h3><span class="icon">🖥️</span> MONITORIZAR: Alertas en Tiempo Real</h3>
+                        <ul class="checklist">
+                            <li><label><input type="checkbox"> Utilizar un monitor en tiempo real (RMF III, OMEGAMON for JVM).</label></li>
+                            <li><label><input type="checkbox"> Alertas para <code>% zIIP en CP</code> (Advertencia > 10%, Crítico > 50%).</label></li>
+                            <li><label><input type="checkbox"> Alertas para Tiempo de Respuesta (Crítico > 2x la línea base).</label></li>
+                            <li><label><input type="checkbox"> Alertas para Recuento de Hebras Activas (Advertencia > 80% del máximo).</label></li>
+                        </ul>
+                    </div>
+            
+                    <div class="checklist-category-card">
+                        <h3><span class="icon">🩺</span> DIAGNOSTICAR: Analizar Anomalías</h3>
+                        <ul class="checklist">
+                            <li><label><input type="checkbox"> Correlacionar <code>Tiempo en z/OS Connect</code> (SMF 123) con <code>% CPU DLY</code> y <code>% IIPCP</code> (RMF 72).</label></li>
+                            <li><label><input type="checkbox"> Usar la "Matriz de Contención" (Sección 5) para identificar el cuello de botella (CP, zIIP, ambos).</label></li>
+                        </ul>
+                    </div>
+            
+                    <div class="checklist-category-card">
+                        <h3><span class="icon">🛠️</span> AJUSTAR: Optimizar el Entorno</h3>
+                        <ul class="checklist">
+                            <li><label><input type="checkbox"> Revisar y optimizar la política de WLM (ver "VALIDAR").</label></li>
+                            <li><label><input type="checkbox"> (Para Requester) Habilitar <code>AsyncIO</code> para Liberty.</label></li>
+                            <li><label><input type="checkbox"> (Para Requester) Revisar parámetros de TCP/IP (<code>DELAYACKS</code>, Búferes).</label></li>
+                            <li><label><input type="checkbox"> (Para Provider) Optimizar payloads de API (excluir campos, usar ODO).</label></li>
+                        </ul>
+                    </div>
+            
+                    <div class="checklist-category-card">
+                        <h3><span class="icon">📈</span> PLANIFICAR: Impulsar la Capacidad</h3>
+                        <ul class="checklist">
+                            <li><label><input type="checkbox"> Usar tendencias históricas de <code>% IIPCP</code> para pronosticar necesidades de zIIP.</label></li>
+                            <li><label><input type="checkbox"> Usar tendencias de <code>% CPU DLY</code> para evaluar la capacidad de CP.</label></li>
+                            <li><label><input type="checkbox"> Traducir <code>% IIPCP</code> en impacto de costo de MLC para justificar la adquisición de hardware.</label></li>
+                        </ul>
+                    </div>
+            
+                </div>
             </section>
-        </main>
+            </main>
     </div>
 
     <footer>
