@@ -161,6 +161,10 @@
             font-size: 0.95em;
             color: #393939;
             border: 1px solid #dce1e5;
+            /* --- CORRECCIÓN --- */
+            /* Esto forzará a las etiquetas <code> largas a saltar de línea si es necesario */
+            overflow-wrap: break-word;
+            word-wrap: break-word; 
         }
 
         blockquote {
@@ -210,7 +214,7 @@
             background-color: #f5f8fc;
         }
 
-        /* --- INICIO DE ESTILOS DE SECCIÓN 7 MEJORADA --- */
+        /* --- INICIO DE ESTILOS DE SECCIÓN 7 CORREGIDOS --- */
         .checklist-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -248,46 +252,50 @@
             margin-right: 10px;
         }
 
-        /* Ajustes a la lista de verificación dentro de las tarjetas */
         .checklist {
             list-style-type: none;
             padding-left: 0;
         }
         
         .checklist li {
-            font-size: 0.95rem; /* Un poco más pequeño para caber bien */
+            font-size: 0.95rem;
             margin-bottom: 12px;
-            display: flex;
-            align-items: flex-start; /* Alinear con el inicio del texto */
-            line-height: 1.4;
+            line-height: 1.5; /* Aumentado ligeramente para mejor legibilidad */
         }
         
         .checklist label {
-            display: flex;
-            align-items: flex-start;
+            /* --- CORRECCIÓN --- */
+            /* Quitado 'display: flex' */
+            display: block; /* Asegura que la etiqueta ocupe su propia línea */
+            position: relative; /* Ancla para el pseudo-elemento ::before */
+            padding-left: 32px; /* Espacio para la casilla (18px + 12px margen + 2px borde) */
             cursor: pointer;
+            min-height: 22px; /* Altura mínima para alinear con la casilla */
         }
 
         .checklist input[type="checkbox"] {
-            /* Ocultar checkbox por defecto */
             opacity: 0;
             width: 0;
             height: 0;
         }
 
-        /* Crear un checkbox personalizado */
         .checklist label::before {
+            /* --- CORRECCIÓN --- */
             content: '';
-            width: 18px; /* Un poco más pequeño */
+            width: 18px;
             height: 18px;
             border: 2px solid var(--secondary-color);
             border-radius: 4px;
-            margin-right: 12px;
-            flex-shrink: 0; /* Evitar que se encoja */
-            margin-top: 2px; /* Alinear con el texto */
             transition: all 0.2s;
+            
+            /* Quitado 'flex-shrink: 0' y 'margin-right' */
+            
+            /* Añadido posicionamiento absoluto */
+            position: absolute;
+            left: 0;
+            top: 2px; /* Ajusta esto para alinear verticalmente con la primera línea de texto */
         }
-        /* --- FIN DE ESTILOS DE SECCIÓN 7 MEJORADA --- */
+        /* --- FIN DE ESTILOS DE SECCIÓN 7 CORREGIDOS --- */
 
 
         footer {
@@ -362,122 +370,122 @@
         <main>
             <section id="section-1">
                 <h2>Sección 1: Arquitectura Fundamental de CPU (CP vs. zIIP)</h2>
-                <p>El entorno de procesamiento en los mainframes IBM Z se basa en una distinción crítica entre dos tipos de procesadores. Comprender su interacción es fundamental para la economía y el rendimiento de z/OS Connect.</p>
+                [cite_start]<p>El entorno de procesamiento en los mainframes IBM Z se basa en una distinción crítica entre dos tipos de procesadores[cite: 6]. [cite_start]Comprender su interacción es fundamental para la economía y el rendimiento de z/OS Connect[cite: 7].</p>
 
                 <h3>Procesadores de Propósito General (CPs)</h3>
-                <p>Los CPs (o GCPs) son los motores de procesamiento primarios del mainframe. Son responsables de ejecutar el núcleo del sistema operativo z/OS, la lógica de aplicaciones tradicionales (como CICS, IMS, Db2) y la gestión de todas las operaciones de entrada/salida (I/O). El uso de CP está directamente vinculado a la clasificación de Millones de Unidades de Servicio (MSU) de la máquina, que es la base principal para los costos de licencia de software de Cargo de Licencia Mensual (MLC) tanto de IBM como de proveedores independientes (ISV). Por lo tanto, gestionar su utilización es un objetivo clave para la optimización de costos.</p>
+                [cite_start]<p>Los CPs (o GCPs) son los motores de procesamiento primarios del mainframe[cite: 8, 302]. [cite_start]Son responsables de ejecutar todas las funciones del sistema operativo [cite: 9][cite_start], la lógica de las aplicaciones tradicionales (como CICS, IMS, Db2) [cite: 303] [cite_start]y la gestión de todas las operaciones de entrada/salida (I/O)[cite: 9, 303]. [cite_start]El uso de CP está directamente vinculado a la clasificación de Millones de Unidades de Servicio (MSU) de la máquina [cite: 10, 303][cite_start], que es la base principal para los costos de licencia de software de Cargo de Licencia Mensual (MLC)[cite: 10, 303]. [cite_start]Por lo tanto, gestionar su utilización es un objetivo clave para la optimización de costos[cite: 11].</p>
 
                 <h3>Procesadores de Información Integrada z (zIIPs)</h3>
-                <p>Los zIIPs son motores de especialidad diseñados para procesar tipos de trabajo específicos y "nuevos", como Java y APIs RESTful, de forma asíncrona a los CPs. Su propuesta de valor es principalmente económica: el trabajo ejecutado en un zIIP generalmente no contribuye a los cargos de software basados en MSU. Esto permite a las organizaciones modernizar sus aplicaciones sin impactar significativamente sus costos de licenciamiento.</p>
-                <p>Una diferencia operativa clave es la velocidad. Los zIIPs siempre operan a la velocidad máxima del modelo de procesador, mientras que los CPs en modelos de subcapacidad son ralentizados deliberadamente. Esta disparidad es relevante cuando el trabajo destinado a un zIIP debe desbordarse hacia un CP.</p>
+                [cite_start]<p>Los zIIPs son motores de especialidad diseñados para procesar tipos de trabajo específicos y "nuevos" [cite: 304][cite_start], como Java y APIs RESTful[cite: 304], de forma asíncrona a los CPs. [cite_start]Su propuesta de valor es principalmente económica: el trabajo ejecutado en un zIIP generalmente no contribuye a los cargos de software basados en MSU[cite: 12, 304]. [cite_start]Esto permite a las organizaciones modernizar sus aplicaciones sin impactar significativamente sus costos de licenciamiento[cite: 304].</p>
+                <p>Una diferencia operativa clave es la velocidad. [cite_start]Los zIIPs siempre operan a la velocidad máxima del modelo de procesador, mientras que los CPs en modelos de subcapacidad son ralentizados deliberadamente[cite: 12, 306]. [cite_start]Esta disparidad es relevante cuando el trabajo destinado a un zIIP debe desbordarse hacia un CP[cite: 306].</p>
 
                 <h3>El Modelo de Despacho CP-zIIP</h3>
-                <p>El trabajo elegible para zIIP no se origina de forma autónoma en el zIIP. Primero debe ser reconocido y despachado por un CP. Un CP siempre está involucrado en la iniciación de la unidad de trabajo, que luego se transfiere a un zIIP disponible para su ejecución. Esta dependencia inicial significa que la disponibilidad y capacidad de respuesta de los CPs son un prerrequisito para la utilización eficiente de los zIIPs. El despachador de z/OS, junto con el Workload Manager (WLM), determina si la unidad de trabajo (técnicamente, un Bloque de Solicitud de Servicio o SRB) es elegible para ser descargada.</p>
+                [cite_start]<p>El trabajo elegible para zIIP no se origina de forma autónoma en el zIIP[cite: 15]. [cite_start]Primero debe ser reconocido y despachado por un CP[cite: 16, 309]. [cite_start]Un CP siempre está involucrado en la iniciación de la unidad de trabajo [cite: 17][cite_start], que luego se transfiere a un zIIP disponible para su ejecución[cite: 17, 314]. [cite_start]Esta dependencia inicial significa que la disponibilidad y capacidad de respuesta de los CPs son un prerrequisito para la utilización eficiente de los zIIPs[cite: 18]. [cite_start]El despachador de z/OS, junto con el Workload Manager (WLM), determina si la unidad de trabajo (técnicamente, un Bloque de Solicitud de Servicio o SRB) es elegible para ser descargada[cite: 23, 311, 313].</p>
             </section>
 
             <section id="section-2">
                 <h2>Sección 2: Anatomía de la Carga de Trabajo de z/OS Connect</h2>
-                <p>z/OS Connect está construido sobre el perfil WebSphere Liberty y escrito predominantemente en Java. Esta base tecnológica es la clave de su perfil de rendimiento, ya que la ejecución de Java en z/OS es altamente elegible para la descarga a zIIP. IBM declara que más del 99% del código del producto z/OS Connect es elegible para ser descargado a procesadores zIIP.</p>
-                <p>Sin embargo, una transacción de API de extremo a extremo no es monolítica. Es una secuencia de tareas distintas, algunas vinculadas a CP y otras elegibles para zIIP.</p>
+                [cite_start]<p>z/OS Connect está construido sobre el perfil WebSphere Liberty y escrito predominantemente en Java[cite: 20, 318]. [cite_start]Esta base tecnológica es la clave de su perfil de rendimiento, ya que la ejecución de Java en z/OS es altamente elegible para la descarga a zIIP[cite: 21]. [cite_start]IBM declara que más del 99% del código del producto z/OS Connect es elegible para ser descargado a procesadores zIIP[cite: 22, 319].</p>
+                [cite_start]<p>Sin embargo, una transacción de API de extremo a extremo no es monolítica[cite: 25]. [cite_start]Es una secuencia de tareas distintas, algunas vinculadas a CP y otras elegibles para zIIP[cite: 26, 222].</p>
 
                 <h3>Anatomía de un Flujo de API Provider (Entrante)</h3>
                 <p>Este es el ciclo de vida de una solicitud de API que *entra* a z/OS para acceder a un sistema de registro (SoR) como CICS o IMS.</p>
                 <ol>
-                    <li><strong>Llegada y Despacho Inicial (CP-Bound):</strong> Cada solicitud entrante es manejada inicialmente por un CP, que gestiona la pila de red y prepara el trabajo para la JVM.</li>
-                    <li><strong>Evaluación de Elegibilidad (CP-Bound):</strong> El despachador de z/OS y WLM determinan si el trabajo puede moverse a un zIIP.</li>
-                    <li><strong>Procesamiento Principal (zIIP-Eligible):</strong> Si un zIIP está disponible, el trabajo se despacha allí. Esta es la parte más intensiva en CPU de z/OS Connect e incluye:
+                    [cite_start]<li><strong>Llegada y Despacho Inicial (CP-Bound):</strong> Cada solicitud entrante es manejada inicialmente por un CP [cite: 309][cite_start], que gestiona la pila de red y prepara el trabajo para la JVM[cite: 310].</li>
+                    [cite_start]<li><strong>Evaluación de Elegibilidad (CP-Bound):</strong> El despachador de z/OS y WLM determinan si el trabajo puede moverse a un zIIP[cite: 311].</li>
+                    [cite_start]<li><strong>Procesamiento Principal (zIIP-Eligible):</strong> Si un zIIP está disponible, el trabajo se despacha allí[cite: 314]. Esta es la parte más intensiva en CPU de z/OS Connect e incluye:
                         <ul>
-                            <li><strong>Transformación de Datos JSON:</strong> El análisis (parsing) de payloads JSON entrantes y la generación de JSON saliente es totalmente elegible para zIIP.</li>
-                            <li><strong>Seguridad y Criptografía:</strong> El cifrado/descifrado de red (IPsec) puede ser descargado a zIIPs.</li>
+                            [cite_start]<li><strong>Transformación de Datos JSON:</strong> El análisis (parsing) de payloads JSON entrantes y la generación de JSON saliente es totalmente elegible para zIIP[cite: 321].</li>
+                            [cite_start]<li><strong>Seguridad y Criptografía:</strong> El cifrado/descifrado de red (IPsec) puede ser descargado a zIIPs[cite: 322].</li>
                         </ul>
                     </li>
-                    <li><strong>Llamada al Sistema de Registro (SoR) (CP-Bound):</strong> La llamada final al backend (CICS, IMS, Db2) se ejecuta predominantemente en CPs.</li>
+                    [cite_start]<li><strong>Llamada al Sistema de Registro (SoR) (CP-Bound):</strong> La llamada final al backend (CICS, IMS, Db2) se ejecuta predominantemente en CPs[cite: 328].</li>
                 </ol>
                 <blockquote>
-                    <strong>Punto Crítico:</strong> El costo total de CPU de una llamada API es la suma de (CPU de z/OS Connect) + (CPU del SoR). Mientras que el primer término es altamente elegible para zIIP, el segundo no lo es. No comprender esto puede llevar a un aprovisionamiento insuficiente de CPs.
+                    [cite_start]<strong>Punto Crítico:</strong> El costo total de CPU de una llamada API es la suma de (CPU de z/OS Connect) + (CPU del SoR)[cite: 325]. [cite_start]Mientras que el primer término es altamente elegible para zIIP, el segundo no lo es[cite: 326]. [cite_start]No comprender esto puede llevar a un aprovisionamiento insuficiente de CPs[cite: 327].
                 </blockquote>
 
                 <h3>Anatomía de un Flujo de API Requester (Saliente)</h3>
-                <p>Este es el flujo cuando una aplicación z/OS (como CICS o un trabajo batch) llama a z/OS Connect para consumir una API RESTful externa.</p>
+                [cite_start]<p>Este es el flujo cuando una aplicación z/OS (como CICS o un trabajo batch) llama a z/OS Connect para consumir una API RESTful externa[cite: 25].</p>
                 <ol>
-                    <li><strong>Llamada de Aplicación a z/OS Connect (CP-Bound):</strong> La comunicación inicial (ej. WOLA, IPIC) desde la aplicación z/OS a z/OS Connect está vinculada a CPs.</li>
+                    [cite_start]<li><strong>Llamada de Aplicación a z/OS Connect (CP-Bound):</strong> La comunicación inicial (ej. WOLA, IPIC) desde la aplicación z/OS a z/OS Connect está vinculada a CPs[cite: 28].</li>
                     <li><strong>Procesamiento Pre-Llamada (Mixto):</strong>
                         <ul>
-                            <li><strong>Seguridad (CP-Bound):</strong> La validación de la identidad (ej. SAF) es intensiva en CP, aunque puede mitigarse con perfiles RACLISTed.</li>
-                            <li><strong>Transformación de Datos (zIIP-Eligible):</strong> Convertir la estructura de datos de COBOL a un payload JSON (marshalling) es una actividad central de Java y altamente elegible para zIIP.</li>
+                            [cite_start]<li><strong>Seguridad (CP-Bound):</strong> La validación de la identidad (ej. SAF) es intensiva en CP [cite: 32][cite_start], aunque puede mitigarse con perfiles RACLISTed[cite: 32].</li>
+                            [cite_start]<li><strong>Transformación de Datos (zIIP-Eligible):</strong> Convertir la estructura de datos de COBOL a un payload JSON (marshalling) es una actividad central de Java y altamente elegible para zIIP[cite: 34].</li>
                         </ul>
                     </li>
-                    <li><strong>E/S de Red Saliente (CP-Bound):</strong> El establecimiento del socket, el handshake TLS y el envío de la solicitud HTTP son funciones del sistema operativo vinculadas a CPs.</li>
-                    <li><strong>Espera de Respuesta:</strong> El hilo espera, consumiendo mínima CPU.</li>
+                    [cite_start]<li><strong>E/S de Red Saliente (CP-Bound):</strong> El establecimiento del socket, el handshake TLS y el envío de la solicitud HTTP son funciones del sistema operativo vinculadas a CPs[cite: 36].</li>
+                    [cite_start]<li><strong>Espera de Respuesta:</strong> El hilo espera, consumiendo mínima CPU[cite: 37].</li>
                     <li><strong>Procesamiento Post-Llamada (Mixto):</strong>
                         <ul>
-                            <li><strong>Recepción de Red (CP-Bound):</strong> Recibir la respuesta HTTP está vinculado a CPs.</li>
-                            <li><strong>Transformación de Datos (zIIP-Eligible):</strong> Analizar el JSON de respuesta y transformarlo de nuevo a COBOL (unmarshalling) es highly elegible para zIIP.</li>
+                            [cite_start]<li><strong>Recepción de Red (CP-Bound):</strong> Recibir la respuesta HTTP está vinculado a CPs[cite: 39].</li>
+                            [cite_start]<li><strong>Transformación de Datos (zIIP-Eligible):</strong> Analizar el JSON de respuesta y transformarlo de nuevo a COBOL (unmarshalling) es altamente elegible para zIIP[cite: 41].</li>
                         </ul>
                     </li>
-                    <li><strong>Retorno a la Aplicación (CP-Bound):</strong> Devolver los datos a la aplicación z/OS llamante está vinculado a CPs.</li>
+                    [cite_start]<li><strong>Retorno a la Aplicación (CP-Bound):</strong> Devolver los datos a la aplicación z/OS llamante está vinculado a CPs[cite: 43].</li>
                 </ol>
                 <blockquote>
-                    <strong>Punto Crítico:</strong> El rendimiento de una llamada de API Requester es una secuencia de tareas. Un cuello de botella en las fases vinculadas a CP (como la E/S de red o la seguridad) puede dominar el tiempo de respuesta total, incluso si la utilización de zIIP es baja.
+                    [cite_start]<strong>Punto Crítico:</strong> El rendimiento de una llamada de API Requester es una secuencia de tareas[cite: 44]. [cite_start]Un cuello de botella en las fases vinculadas a CP (como la E/S de red o la seguridad) puede dominar el tiempo de respuesta total [cite: 45][cite_start], incluso si la utilización de zIIP es baja[cite: 46].
                 </blockquote>
             </section>
 
             <section id="section-3">
                 <h2>Sección 3: El Impacto de la Escasez de Procesadores</h2>
-                <p>La contención de procesadores ocurre cuando la demanda de ciclos de CP o zIIP excede la oferta disponible. Esto no es un problema aislado; desencadena una cascada de efectos que degradan el rendimiento.</p>
+                [cite_start]<p>La contención de procesadores ocurre cuando la demanda de ciclos de CP o zIIP excede la oferta disponible[cite: 53]. [cite_start]Esto no es un problema aislado; desencadena una cascada de efectos que degradan el rendimiento[cite: 51].</p>
 
                 <h3>Definición de Contención y Retardo de CP</h3>
-                <p>WLM gestiona la contención priorizando el trabajo. Cuando una unidad de trabajo está lista para ejecutarse pero no hay un CP disponible, incurre en <strong>"Retardo de CPU" (CPU Delay)</strong>. Esta es una métrica clave capturada por RMF y es el porcentaje de tiempo que un trabajo estuvo listo pero en cola, esperando un procesador. El Retardo de CP se traduce directamente en tiempos de respuesta aumentados e impredecibles, rendimiento reducido e inestabilidad del sistema.</p>
+                [cite_start]<p>WLM gestiona la contención priorizando el trabajo[cite: 55]. [cite_start]Cuando una unidad de trabajo está lista para ejecutarse pero no hay un CP disponible, incurre en <strong>"Retardo de CPU" (CPU Delay)</strong>[cite: 56]. [cite_start]Esta es una métrica clave capturada por RMF [cite: 57] [cite_start]y es el porcentaje de tiempo que un trabajo estuvo listo pero en cola, esperando un procesador[cite: 58]. [cite_start]El Retardo de CP se traduce directamente en tiempos de respuesta aumentados e impredecibles [cite: 362][cite_start], rendimiento reducido [cite: 363] [cite_start]e inestabilidad del sistema[cite: 364].</p>
 
                 <h3>Escenario 1: Saturación de zIIP y el Efecto "Spillover" (Desbordamiento)</h3>
-                <p>Los zIIPs son un recurso finito. Cuando todos los zIIPs disponibles están ocupados (debido a altos volúmenes, JSON grandes o cargas de trabajo concurrentes), el sistema redirige el trabajo elegible para zIIP para que se ejecute en los CPs de propósito general. Este "desbordamiento" (spillover) tiene graves consecuencias:</p>
+                [cite_start]<p>Los zIIPs son un recurso finito[cite: 71]. [cite_start]Cuando todos los zIIPs disponibles están ocupados (debido a altos volúmenes, JSON grandes o cargas de trabajo concurrentes) [cite: 333][cite_start], el sistema redirige el trabajo elegible para zIIP para que se ejecute en los CPs de propósito general[cite: 72, 315]. Este "desbordamiento" (spillover) tiene graves consecuencias:</p>
                 <ul>
-                    <li><strong>Aumento de Costos de Software:</strong> El trabajo que estaba destinado a ser "gratuito" (desde la perspectiva de licenciamiento) ahora se ejecuta en CPs facturables, consumiendo MSUs y aumentando los costos de MLC.</li>
-                    <li><strong>Aumento de la Contención de CP:</strong> Este trabajo de desbordamiento ahora compite directamente con el trabajo crítico que *debe* ejecutarse en CPs (como CICS, Db2 y la E/S de red).</li>
-                    <li><strong>DegradACIÓN del Rendimiento:</strong> El trabajo desbordado perjudica activamente el rendimiento de toda la LPAR. Ralentiza el SoR de backend, lo que a su vez retiene la solicitud de z/OS Connect por más tiempo, exacerbando el problema en un ciclo de retroalimentación de degradación.</li>
+                    [cite_start]<li><strong>Aumento de Costos de Software:</strong> El trabajo que estaba destinado a ser "gratuito" (desde la perspectiva de licenciamiento) ahora se ejecuta en CPs facturables [cite: 75][cite_start], consumiendo MSUs y aumentando los costos de MLC[cite: 76].</li>
+                    [cite_start]<li><strong>Aumento de la Contención de CP:</strong> Este trabajo de desbordamiento ahora compite directamente con el trabajo crítico que *debe* ejecutarse en CPs (como CICS, Db2 y la E/S de red)[cite: 73, 335].</li>
+                    [cite_start]<li><strong>Degradación del Rendimiento:</strong> El trabajo desbordado perjudica activamente el rendimiento de toda la LPAR[cite: 336]. [cite_start]Ralentiza el SoR de backend, lo que a su vez retiene la solicitud de z/OS Connect por más tiempo, exacerbando el problema en un ciclo de retroalimentación de degradación[cite: 338]. [cite_start]Un estudio de caso mostró que un aumento en el desbordamiento (IIPCP) se correlacionó con un aumento del tiempo de respuesta de 1.38ms a 5.03ms[cite: 335].</li>
                 </ul>
 
                 <h3>Escenario 2: Escasez de CP y el Efecto "Bottleneck" (Cuello de Botella)</h3>
-                <p>Un entorno con restricciones de CP es aquel en el que la demanda total de ciclos de CP (trabajo de SoR, E/S, gestión del sistema operativo y trabajo desbordado de zIIP) excede la capacidad. Esto paraliza a z/OS Connect de varias maneras:</p>
+                [cite_start]<p>Un entorno con restricciones de CP es aquel en el que la demanda total de ciclos de CP (trabajo de SoR, E/S, gestión del sistema operativo y trabajo desbordado de zIIP) excede la capacidad[cite: 340]. Esto paraliza a z/OS Connect de varias maneras:</p>
                 <ul>
-                    <li><strong>Retraso en el Manejo Inicial:</strong> El primer paso de recibir una solicitud de la red se retrasa, ya que requiere un CP.</li>
-                    <li><strong>Llamadas al SoR/Red Congeladas:</strong> Todas las llamadas salientes (al SoR en flujos de Provider, a la red en flujos de Requester) deben despacharse en un CP. La escasez significa esperas más largas para estas partes críticas.</li>
-                    <li><strong>Gestión de JVM Degradada:</strong> La Recolección de Basura (Garbage Collection - GC) puede tener componentes que requieren ciclos de CP. Los retrasos aquí provocan pausas en la aplicación.</li>
+                    [cite_start]<li><strong>Retraso en el Manejo Inicial:</strong> El primer paso de recibir una solicitud de la red se retrasa, ya que requiere un CP[cite: 342, 485].</li>
+                    [cite_start]<li><strong>Llamadas al SoR/Red Congeladas:</strong> Todas las llamadas salientes (al SoR en flujos de Provider, a la red en flujos de Requester) deben despacharse en un CP[cite: 36, 344, 486]. La escasez significa esperas más largas para estas partes críticas.</li>
+                    [cite_start]<li><strong>Gestión de JVM Degradada:</strong> La Recolección de Basura (Garbage Collection - GC) puede tener componentes que requieren ciclos de CP[cite: 87, 346, 489]. [cite_start]Los retrasos aquí provocan pausas en la aplicación[cite: 347, 490].</li>
                 </ul>
 
                 <h3>Sintomatología y el Ciclo de Retroalimentación</h3>
-                <p>La escasez de CP crea un ciclo de retroalimentación perjudicial, especialmente para los flujos de API Requester:</p>
+                [cite_start]<p>La escasez de CP crea un ciclo de retroalimentación perjudicial, especialmente para los flujos de API Requester[cite: 94]:</p>
                 <ol>
-                    <li>El <strong>Retardo de CP</strong> ralentiza las tareas vinculadas a CP (ej. E/S de red).</li>
-                    <li>Esto aumenta la duración total de la solicitud, lo que significa que las hebras (threads) de Liberty se retienen por más tiempo.</li>
-                    <li>Una mayor ocupación de hebras aumenta la concurrencia y la probabilidad de <strong>saturación de zIIP</strong> (más transformaciones JSON activas).</li>
-                    <li>La saturación de zIIP causa <strong>desbordamiento (spillover)</strong> a los CPs.</li>
-                    <li>Este desbordamiento <strong>aumenta aún más la contención de CP</strong>, regresando al paso 1 con un retardo aún peor.</li>
+                    [cite_start]<li>El <strong>Retardo de CP</strong> ralentiza las tareas vinculadas a CP (ej. E/S de red)[cite: 95].</li>
+                    [cite_start]<li>Esto aumenta la duración total de la solicitud, lo que significa que las hebras (threads) de Liberty se retienen por más tiempo[cite: 85, 96].</li>
+                    [cite_start]<li>Una mayor ocupación de hebras aumenta la concurrencia y la probabilidad de <strong>saturación de zIIP</strong> (más transformaciones JSON activas)[cite: 97].</li>
+                    [cite_start]<li>La saturación de zIIP causa <strong>desbordamiento (spillover)</strong> a los CPs [cite: 98] (un % IIPCP mayor que cero) [cite_start][cite: 78].</li>
+                    [cite_start]<li>Este desbordamiento <strong>aumenta aún más la contención de CP</strong>, regresando al paso 1 con un retardo aún peor[cite: 99].</li>
                 </ol>
-                <p>Este ciclo puede llevar a una rápida degradación del servicio, agotamiento de la agrupación de hebras y fallos en cascada. Un valor de desbordamiento alto no es solo un problema de costos; es un indicador crítico en tiempo real de la degradación del rendimiento sistémico.</p>
+                [cite_start]<p>Este ciclo puede llevar a una rápida degradación del servicio [cite: 100][cite_start], agotamiento de la agrupación de hebras [cite: 86] y fallos en cascada. [cite_start]Un valor de desbordamiento alto (% IIPCP) no es solo un problema de costos; es un indicador crítico en tiempo real de la degradación del rendimiento sistémico[cite: 102, 384].</p>
             </section>
 
             <section id="section-4">
                 <h2>Sección 4: Marco de Medición y Análisis</h2>
-                <p>Para diagnosticar estos problemas, es indispensable un enfoque de monitoreo de múltiples capas, correlacionando datos del sistema (RMF) con datos de la aplicación (SMF 123).</p>
+                [cite_start]<p>Para diagnosticar estos problemas, es indispensable un enfoque de monitoreo de múltiples capas [cite: 367][cite_start], correlacionando datos del sistema (RMF) con datos de la aplicación (SMF 123)[cite: 109, 443].</p>
 
                 <h3>Capa 1: Análisis a Nivel de LPAR (RMF/SMF Tipo 70)</h3>
-                <p>Este informe proporciona una visión de alto nivel de la salud general de los procesadores de la LPAR.</p>
+                [cite_start]<p>Este informe proporciona una visión de alto nivel de la salud general de los procesadores de la LPAR[cite: 369].</p>
                 <ul>
-                    <li><strong>Informe Clave:</strong> Informe de Actividad de CPU de RMF (SMF Tipo 70, Subtipo 1).</li>
+                    [cite_start]<li><strong>Informe Clave:</strong> Informe de Actividad de CPU de RMF (SMF Tipo 70, Subtipo 1)[cite: 122, 370].</li>
                     <li><strong>Métricas a Analizar:</strong>
                         <ul>
-                            <li><code>LPAR Busy</code> vs. <code>MVS Busy</code>: Si LPAR Busy es significativamente mayor, indica contención a nivel de CEC (demanda latente).</li>
-                            <li><strong>Ocupación de CP y zIIP del LPAR:</strong> Buscar intervalos donde la ocupación de CP sea consistentemente alta (>95%) y la ocupación de zIIP también sea alta. Esta combinación predice el desbordamiento.</li>
-                            <li><strong>Vista de HiperDispatch:</strong> Verificar si hay procesadores "Aparcados" (Parked). Si no hay procesadores aparcados durante picos, indica alta utilización.</li>
+                            [cite_start]<li><code>LPAR Busy</code> vs. <code>MVS Busy</code>: Si LPAR Busy es significativamente mayor, indica contención a nivel de CEC (demanda latente)[cite: 372, 426].</li>
+                            [cite_start]<li><strong>Ocupación de CP y zIIP del LPAR:</strong> Buscar intervalos donde la ocupación de CP sea consistentemente alta (>95%) y la ocupación de zIIP también sea alta[cite: 123]. [cite_start]Esta combinación predice el desbordamiento[cite: 124].</li>
+                            [cite_start]<li><strong>Vista de HiperDispatch:</strong> Verificar si hay procesadores "Aparcados" (Parked)[cite: 375]. [cite_start]Si no hay procesadores aparcados durante picos, indica alta utilización[cite: 376].</li>
                         </ul>
                     </li>
                 </ul>
 
                 <h3>Capa 2: Análisis Granular de Carga de Trabajo (RMF/SMF Tipo 72)</h3>
-                <p>Este es el informe más crítico para entender la efectividad de la descarga a zIIP y medir la contención a nivel de la clase de servicio de z/OS Connect.</p>
+                [cite_start]<p>Este es el informe más crítico para entender la efectividad de la descarga a zIIP y medir la contención a nivel de la clase de servicio de z/OS Connect[cite: 378, 380].</p>
                 <ul>
-                    <li><strong>Informe Clave:</strong> Informe de Actividad de la Carga de Trabajo de RMF (WLMGL) (SMF Tipo 72, Subtipo 3).</li>
+                    [cite_start]<li><strong>Informe Clave:</strong> Informe de Actividad de la Carga de Trabajo de RMF (WLMGL) (SMF Tipo 72, Subtipo 3)[cite: 110, 379].</li>
                     <li><strong>Métricas Clave a Analizar:</strong>
                         <table>
                             <thead>
@@ -492,32 +500,32 @@
                                 <tr>
                                     <td><code>APPL% -> CP</code></td>
                                     <td>-</td>
-                                    <td>Porcentaje de tiempo de CPU que se ejecutó en un CP estándar.</td>
-                                    <td>Indica trabajo no elegible o desbordado.</td>
+                                    [cite_start]<td>Porcentaje de tiempo de CPU que se ejecutó en un CP estándar[cite: 383].</td>
+                                    [cite_start]<td>Indica trabajo no elegible o desbordado[cite: 383].</td>
                                 </tr>
                                 <tr>
                                     <td><code>APPL% -> IIP</code></td>
                                     <td>-</td>
-                                    <td>Porcentaje de tiempo de CPU que se ejecutó con éxito en un zIIP.</td>
-                                    <td>Mide la descarga exitosa. Un valor alto es deseable.</td>
+                                    [cite_start]<td>Porcentaje de tiempo de CPU que se ejecutó con éxito en un zIIP[cite: 383].</td>
+                                    <td>Mide la descarga exitosa. [cite_start]Un valor alto es deseable[cite: 383].</td>
                                 </tr>
                                 <tr>
                                     <td><strong><code>APPL% -> IIPCP</code></strong></td>
-                                    <td><code>R723SUCU</code></td>
-                                    <td>Porcentaje de tiempo de CPU que era <strong>elegible para zIIP</strong> pero se vio forzado a ejecutarse en un CP estándar debido a que los zIIPs estaban ocupados.</td>
-                                    <td><strong>La métrica más importante para la saturación de zIIP.</strong> Un valor creciente es un indicador principal de un cuello de botella de zIIP.</td>
+                                    [cite_start]<td><code>R723SUCU</code> [cite: 166]</td>
+                                    [cite_start]<td>Porcentaje de tiempo de CPU que era <strong>elegible para zIIP</strong> pero se vio forzado a ejecutarse en un CP estándar debido a que los zIIPs estaban ocupados[cite: 118, 383].</td>
+                                    [cite_start]<td><strong>La métrica más importante para la saturación de zIIP</strong>[cite: 383]. [cite_start]Un valor creciente es un indicador principal de un cuello de botella de zIIP[cite: 383].</td>
                                 </tr>
                                  <tr>
                                     <td><strong><code>CPU DLY %</code></strong></td>
-                                    <td><code>R723CADL</code></td>
-                                    <td>Porcentaje de tiempo que la carga de trabajo estuvo lista para ejecutarse pero estaba esperando un CP.</td>
-                                    <td><strong>La medida directa del retardo de CP.</strong> Causa raíz del aumento del tiempo de respuesta.</td>
+                                    [cite_start]<td><code>R723CADL</code> [cite: 166]</td>
+                                    [cite_start]<td>Porcentaje de tiempo que la carga de trabajo estuvo lista para ejecutarse pero estaba esperando un CP[cite: 115].</td>
+                                    [cite_start]<td><strong>La medida directa del retardo de CP</strong>[cite: 116, 354]. [cite_start]Causa raíz del aumento del tiempo de respuesta[cite: 166].</td>
                                 </tr>
                                 <tr>
                                     <td><code>VELOCITY</code></td>
-                                    <td>-</td>
-                                    <td>Indicador de si la carga de trabajo está cumpliendo sus objetivos de WLM.</td>
-                                    <td>Una velocidad por debajo del objetivo indica que la carga de trabajo está siendo retrasada.</td>
+                                    [cite_start]<td>- [cite: 166]</td>
+                                    [cite_start]<td>Indicador de si la carga de trabajo está cumpliendo sus objetivos de WLM[cite: 113].</td>
+                                    [cite_start]<td>Una velocidad por debajo del objetivo indica que la carga de trabajo está siendo retrasada (probablemente por CPU DLY)[cite: 114, 166].</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -525,24 +533,24 @@
                 </ul>
 
                 <h3>Capa 3: Diagnóstico en Tiempo Real (RMF III / OMEGAMON)</h3>
-                <p>Estas herramientas son cruciales para diagnosticar problemas activos e identificar los trabajos específicos que causan contención.</p>
+                [cite_start]<p>Estas herramientas son cruciales para diagnosticar problemas activos e identificar los trabajos específicos que causan contención[cite: 139, 387].</p>
                 <ul>
                     <li><strong>RMF Monitor III:</strong>
                         <ul>
-                            <li><strong>Informe de Retrasos de Trabajos (Job Delays):</strong> Muestra qué espacios de direcciones están siendo retrasados. Un valor alto en la columna <code>PRC</code> para z/OS Connect indica que está esperando un procesador.</li>
-                            <li><strong>Informe de Retrasos del Procesador (Processor Delays):</strong> Desglosa el retraso <code>PRC</code>. Un <code>DELAY%</code> alto para zIIPs significa saturación de zIIP. Un <code>DELAY%</code> alto para CPs significa contención de CP.</li>
+                            [cite_start]<li><strong>Informe de Retrasos de Trabajos (Job Delays):</strong> Muestra qué espacios de direcciones están siendo retrasados[cite: 389]. [cite_start]Un valor alto en la columna <code>PRC</code> para z/OS Connect indica que está esperando un procesador[cite: 390].</li>
+                            [cite_start]<li><strong>Informe de Retrasos del Procesador (Processor Delays):</strong> Desglosa el retraso <code>PRC</code>[cite: 391]. Un <code>DELAY%</code> alto para zIIPs significa saturación de zIIP. [cite_start]Un <code>DELAY%</code> alto para CPs significa contención de CP[cite: 392, 394].</li>
                         </ul>
                     </li>
                     <li><strong>OMEGAMON for JVM (o similar):</strong>
                         <ul>
-                            <li><strong>Uso de CPU de JVM:</strong> Muestra el desglose en tiempo real entre tiempo de CP, tiempo de zIIP y, crucialmente, el trabajo elegible para zIIP que se ejecuta en CPs (el equivalente en tiempo real de <code>IIPCP</code>).</li>
-                            <li><strong>Detalles de Hebras (Threads):</strong> Permite identificar hebras bloqueadas o de larga duración.</li>
-                            <li><strong>Alertas (Situaciones):</strong> Se deben configurar alertas proactivas.
+                            [cite_start]<li><strong>Uso de CPU de JVM:</strong> Muestra el desglose en tiempo real entre tiempo de CP, tiempo de zIIP y, crucialmente, el trabajo elegible para zIIP que se ejecuta en CPs (el equivalente en tiempo real de <code>IIPCP</code>)[cite: 142, 143].</li>
+                            [cite_start]<li><strong>Detalles de Hebras (Threads):</strong> Permite identificar hebras bloqueadas o de larga duración[cite: 144].</li>
+                            [cite_start]<li><strong>Alertas (Situaciones):</strong> Se deben configurar alertas proactivas[cite: 153].
                                 <ul>
-                                    <li><strong>Advertencia:</strong> <code>% zIIP en CP</code> > 10% sostenido.</li>
-                                    <li><strong>Crítico:</strong> <code>% zIIP en CP</code> > 50% (indica contención severa).</li>
-                                    <li><strong>Crítico:</strong> Tiempo de Respuesta Promedio > 2x la línea base.</li>
-                                    <li><strong>Advertencia:</strong> Recuento de Hebras Activas > 80% del máximo (riesgo de agotamiento).</li>
+                                    [cite_start]<li><strong>Advertencia:</strong> <code>% zIIP en CP</code> > 10% sostenido[cite: 155].</li>
+                                    [cite_start]<li><strong>Crítico:</strong> <code>% zIIP en CP</code> > 50% (indica contención severa)[cite: 157].</li>
+                                    [cite_start]<li><strong>Crítico:</strong> Tiempo de Respuesta Promedio > 2x la línea base[cite: 159].</li>
+                                    [cite_start]<li><strong>Advertencia:</strong> Recuento de Hebras Activas > 80% del máximo (riesgo de agotamiento)[cite: 160].</li>
                                 </ul>
                             </li>
                         </ul>
@@ -550,22 +558,22 @@
                 </ul>
 
                 <h3>Capa 4: Análisis de Solicitudes de Extremo a Extremo (SMF Tipo 123)</h3>
-                <p>Este registro es generado por el propio z/OS Connect y es la fuente definitiva para el tiempo de respuesta de las solicitudes individuales. Es crucial habilitar los registros V2 (<code>apiRequesterSmfVersion="2"</code>) para flujos de Requester, ya que contienen marcas de tiempo más detalladas.</p>
+                [cite_start]<p>Este registro es generado por el propio z/OS Connect [cite: 396] [cite_start]y es la fuente definitiva para el tiempo de respuesta de las solicitudes individuales[cite: 125]. [cite_start]Es crucial habilitar los registros V2 (<code>apiRequesterSmfVersion="2"</code>) para flujos de Requester, ya que contienen marcas de tiempo más detalladas[cite: 126, 236].</p>
                 <ul>
                     <li><strong>Metodología de Correlación:</strong>
                         <ol>
-                            <li>Identificar períodos de alto Retardo de CP (<code>CPU DLY %</code>) o alto desbordamiento (<code>IIPCP %</code>) usando RMF (SMF 72).</li>
-                            <li>Extraer los registros SMF 123 para el mismo intervalo de tiempo.</li>
-                            <li>Calcular los componentes del tiempo de respuesta usando las marcas de tiempo de SMF 123.</li>
+                            [cite_start]<li>Identificar períodos de alto Retardo de CP (<code>CPU DLY %</code>) o alto desbordamiento (<code>IIPCP %</code>) usando RMF (SMF 72)[cite: 135, 398].</li>
+                            [cite_start]<li>Extraer los registros SMF 123 para el mismo intervalo de tiempo[cite: 135, 399].</li>
+                            [cite_start]<li>Calcular los componentes del tiempo de respuesta usando las marcas de tiempo de SMF 123[cite: 134, 400].</li>
                         </ol>
                     </li>
                     <li><strong>Cálculo de Tiempos (Ejemplo API Provider):</strong>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Marca de Tiempo (V2)</th>
-                                    <th>Descripción</th>
-                                    <th>Fórmula</th>
+                                    [cite_start]<th>Marca de Tiempo (V2) [cite: 404]</th>
+                                    [cite_start]<th>Descripción [cite: 404]</th>
+                                    [cite_start]<th>Fórmula [cite: 404]</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -593,129 +601,130 @@
                             </tbody>
                         </table>
                     </li>
-                    <li><strong>Conclusión de la Correlación:</strong> Si el <strong>"Tiempo de procesamiento en z/OS Connect"</strong> (o "Tiempo en z/OS Connect" para flujos de Requester) está elevado durante períodos de alto <code>CPU DLY %</code> o <code>IIPCP %</code>, se demuestra que la contención de CPU es la causa raíz de la degradación del rendimiento.</li>
+                    [cite_start]<li><strong>Conclusión de la Correlación:</strong> Si el <strong>"Tiempo de procesamiento en z/OS Connect"</strong> (o "Tiempo total en z/OS Connect" para flujos de Requester [cite: 131][cite_start]) está elevado durante períodos de alto <code>CPU DLY %</code> o <code>IIPCP %</code>, se demuestra que la contención de CPU es la causa raíz de la degradación del rendimiento[cite: 137, 401].</li>
                 </ul>
             </section>
 
             <section id="section-5">
                 <h2>Sección 5: Estrategias Proactivas de Ajuste y Optimización</h2>
-                <p>El diagnóstico debe ir seguido de acciones correctivas. Estas estrategias ayudan a prevenir la contención y asegurar un rendimiento óptimo.</p>
+                [cite_start]<p>El diagnóstico debe ir seguido de acciones correctivas[cite: 168]. Estas estrategias ayudan a prevenir la contención y asegurar un rendimiento óptimo.</p>
 
                 <h3>1. Configuración Estratégica de WLM</h3>
-                <p>Una configuración adecuada de WLM es la primera línea de defensa. No se debe usar un objetivo discrecional para z/OS Connect.</p>
+                [cite_start]<p>Una configuración adecuada de WLM es la primera línea de defensa[cite: 170, 509]. [cite_start]No se debe usar un objetivo discrecional para z/OS Connect[cite: 409, 630].</p>
                 <ul>
-                    <li><strong>Clasificación:</strong> Es fundamental habilitar <code>zosWlm-1.0</code> en <code>server.xml</code> y usar reglas de <code>httpClassification</code> para asignar la STC del servidor y los enclaves de solicitud (tipo CB) a clases de servicio separadas y de múltiples períodos.</li>
-                    <li><strong>Objetivos de Múltiples Períodos:</strong> Para las solicitudes (enclaves CB), el primer período debe tener un objetivo de velocidad alto (ej. Velocity 80%) con una duración corta. Esto prioriza las solicitudes rápidas. Las solicitudes de larga duración caen a períodos posteriores con menor prioridad, protegiendo al sistema.</li>
-                    <li><strong>Niveles de Importancia (Flujo Provider):</strong> Para un proveedor de API, el SoR de backend (ej. CICS) debe tener una importancia <strong>más alta</strong> que el servidor z/OS Connect. Esto actúa como un estrangulamiento natural, evitando que z/OS Connect inunde un backend con dificultades y protegiendo al componente más vulnerable.</li>
-                    <li><strong>Niveles de Importancia (Flujo Requester):</strong> Para un solicitante de API, el servidor z/OS Connect debe tener una importancia <strong>más alta</strong> que la aplicación que lo llama (ej. un trabajo batch).</li>
-                    <li><strong>Parámetro <code>IIPHONORPRIORITY</code>:</strong> Este parámetro de LPAR (predeterminado YES) permite que el trabajo de zIIP desbordado compita por CPs según su prioridad de WLM. En entornos con escasez severa de CP, cambiarlo a NO (forzando al trabajo a esperar un zIIP) podría ser una opción de ajuste avanzada para preservar los CPs, aunque puede aumentar la latencia.</li>
+                    [cite_start]<li><strong>Clasificación:</strong> Es fundamental habilitar <code>zosWlm-1.0</code> en <code>server.xml</code> [cite: 178] [cite_start]y usar reglas de <code>httpClassification</code> para asignar la STC del servidor y los enclaves de solicitud (tipo CB) a clases de servicio separadas y de múltiples períodos[cite: 174, 179].</li>
+                    [cite_start]<li><strong>Objetivos de Múltiples Períodos:</strong> Para las solicitudes (enclaves CB), el primer período debe tener un objetivo de velocidad alto (ej. Velocity 80%) con una duración corta[cite: 175, 616]. [cite_start]Esto prioriza las solicitudes rápidas[cite: 176]. [cite_start]Las solicitudes de larga duración caen a períodos posteriores con menor prioridad, protegiendo al sistema[cite: 177].</li>
+                    [cite_start]<li><strong>Niveles de Importancia (Flujo Provider):</strong> Para un proveedor de API, el SoR de backend (ej. CICS) debe tener una importancia <strong>más alta</strong> que el servidor z/OS Connect[cite: 412, 512]. [cite_start]Esto actúa como un estrangulamiento natural, evitando que z/OS Connect inunde un backend con dificultades[cite: 413, 513].</li>
+                    [cite_start]<li><strong>Niveles de Importancia (Flujo Requester):</strong> Para un solicitante de API, el servidor z/OS Connect debe tener una importancia <strong>más alta</strong> que la aplicación que lo llama (ej. un trabajo batch)[cite: 414].</li>
+                    [cite_start]<li><strong>Parámetro <code>IIPHONORPRIORITY</code>:</strong> Este parámetro de LPAR (predeterminado YES [cite: 182, 315, 525][cite_start]) permite que el trabajo de zIIP desbordado compita por CPs según su prioridad de WLM[cite: 182, 350]. [cite_start]En entornos con escasez severa de CP, cambiarlo a NO (forzando al trabajo a esperar un zIIP) podría ser una opción de ajuste avanzada para preservar los CPs, aunque puede aumentar la latencia[cite: 185].</li>
                 </ul>
 
                 <h3>2. Ajuste del Subsistema z/OS y TCP/IP (Enfoque Requester)</h3>
-                <p>Dado que los flujos de solicitante son intensivos en red, optimizar TCP/IP puede reducir significativamente el consumo de CP y la latencia.</p>
+                [cite_start]<p>Dado que los flujos de solicitante son intensivos en red, optimizar TCP/IP puede reducir significativamente el consumo de CP y la latencia[cite: 188, 534].</p>
                 <ul>
-                    <li><strong>Habilitar AsyncIO:</strong> Habilitar el servicio nativo de z/OS AsyncIO permite a Liberty un manejo de sockets más eficiente, mejorando el rendimiento y la escalabilidad de las llamadas salientes.</li>
+                    [cite_start]<li><strong>Habilitar AsyncIO:</strong> Habilitar el servicio nativo de z/OS AsyncIO permite a Liberty un manejo de sockets más eficiente, mejorando el rendimiento y la escalabilidad de las llamadas salientes[cite: 190, 191, 251].</li>
                     <li><strong>Ajuste del Perfil de TCP/IP:</strong>
                         <ul>
-                            <li><code>TCPCONFIG DELAYACKS</code>: Habilitar acuses de recibo retardados puede reducir la cantidad de paquetes y el consumo de CPU.</li>
-                            <li><strong>Checksum Offload:</strong> Descargar los cálculos de suma de comprobación a las tarjetas de red OSA-Express reduce la carga en los CPs.</li>
-                            <li><strong>Tamaños de Búfer:</strong> Asegurar tamaños adecuados (ej. >= 64KB) para <code>DefaultSendBufferSize</code> y <code>DefaultReceiveBufferSize</code> optimiza el rendimiento de la red.</li>
+                            [cite_start]<li><code>TCPCONFIG DELAYACKS</code>: Habilitar acuses de recibo retardados puede reducir la cantidad de paquetes y el consumo de CPU[cite: 193].</li>
+                            [cite_start]<li><strong>Checksum Offload:</strong> Descargar los cálculos de suma de comprobación a las tarjetas de red OSA-Express reduce la carga en los CPs[cite: 194].</li>
+                            [cite_start]<li><strong>Segmentation Offloading:</strong> Descarga la segmentación de paquetes TCP al hardware de OSA-Express, reduciendo el uso de CP[cite: 536, 537].</li>
+                            [cite_start]<li><strong>Tamaños de Búfer:</strong> Asegurar tamaños adecuados (ej. >= 64KB) para <code>DefaultSendBufferSize</code> y <code>DefaultReceiveBufferSize</code> optimiza el rendimiento de la red[cite: 195, 538].</li>
                         </ul>
                     </li>
                 </ul>
 
                 <h3>3. Optimización a Nivel de Aplicación (Reducción de Payloads)</h3>
-                <p>Reducir la demanda de CPU en la fuente es la forma más eficiente de optimización. El costo de CPU es directamente proporcional al tamaño del payload JSON que debe ser transformado.</p>
+                [cite_start]<p>Reducir la demanda de CPU en la fuente es la forma más eficiente de optimización[cite: 429, 528]. [cite_start]El costo de CPU es directamente proporcional al tamaño del payload JSON que debe ser transformado[cite: 321, 430, 529].</p>
                 <ul>
-                    <li><strong>Excluir Campos No Utilizados:</strong> Trabajar con los desarrolladores para mapear solo los campos absolutamente necesarios. Excluir campos no utilizados del mapeo del copybook reduce drásticamente el tamaño del payload y el consumo de CPU.</li>
-                    <li><strong>Usar <code>OCCURS DEPENDING ON</code> (ODO):</strong> Para arrays de COBOL, usar ODO en lugar de arrays de tamaño fijo permite payloads de tamaño variable, reduciendo la sobrecarga de transformación.</li>
-                    <li><strong>Renombrar Campos:</strong> Usar nombres de campo más cortos en el esquema JSON reduce los datos a analizar, proporcionando una ganancia marginal pero significativa para APIs de alto volumen.</li>
+                    [cite_start]<li><strong>Excluir Campos No Utilizados:</strong> Trabajar con los desarrolladores para mapear solo los campos absolutamente necesarios[cite: 431, 531]. [cite_start]Excluir campos no utilizados del mapeo del copybook reduce drásticamente el tamaño del payload y el consumo de CPU[cite: 432].</li>
+                    [cite_start]<li><strong>Usar <code>OCCURS DEPENDING ON</code> (ODO):</strong> Para arrays de COBOL, usar ODO en lugar de arrays de tamaño fijo permite payloads de tamaño variable, reduciendo la sobrecarga de transformación[cite: 433, 532].</li>
+                    [cite_start]<li><strong>Renombrar Campos:</strong> Usar nombres de campo más cortos en el esquema JSON reduce los datos a analizar, proporcionando una ganancia marginal pero significativa para APIs de alto volumen[cite: 434, 533].</li>
                 </ul>
 
                 <h3>4. Planificación Proactiva de la Capacidad</h3>
-                <p>La planificación de capacidad es fundamental y no debe basarse en promedios, sino en volúmenes máximos, ya que las cargas de trabajo de zIIP suelen ser "puntiagudas". El objetivo debe ser mantener el valor de <code>IIPCP</code> cerca de cero durante los picos de negocio.</p>
-                <p>Las métricas <code>% CPU DLY</code> y <code>% IIPCP</code> deben guiar la toma de decisiones:</p>
+                [cite_start]<p>La planificación de capacidad es fundamental [cite: 197, 419] [cite_start]y no debe basarse en promedios, sino en volúmenes máximos [cite: 422][cite_start], ya que las cargas de trabajo de zIIP suelen ser "puntiagudas"[cite: 423]. [cite_start]El objetivo debe ser mantener el valor de <code>IIPCP</code> cerca de cero durante los picos de negocio[cite: 424].</p>
+                [cite_start]<p>Las métricas <code>% CPU DLY</code> y <code>% IIPCP</code> deben guiar la toma de decisiones[cite: 209]:</p>
                 <ul>
-                    <li><strong><code>% CPU DLY</code> alto, <code>% IIPCP</code> bajo:</strong> Cuello de botella clásico de CP. La solución es añadir CPs o ajustar otras cargas de trabajo pesadas en CP.</li>
-                    <li><strong><code>% CPU DLY</code> bajo, <code>% IIPCP</code> alto:</strong> Cuello de botella clásico de zIIP. La solución es añadir zIIPs.</li>
-                    <li><strong><code>% CPU DLY</code> alto, <code>% IIPCP</code> alto:</strong> El sistema está completamente saturado. Este es un déficit crítico de capacidad que requiere la adición de ambos, CPs y zIIPs.</li>
-                    <li><strong><code>% CPU DLY</code> bajo, <code>% IIPCP</code> bajo:</strong> El problema de rendimiento no está relacionado con la contención de procesadores en z/OS. La investigación debe centrarse en la latencia de la red, el rendimiento del endpoint remoto o la lógica de la aplicación.</li>
+                    [cite_start]<li><strong><code>% CPU DLY</code> alto, <code>% IIPCP</code> bajo:</strong> Cuello de botella clásico de CP[cite: 210]. [cite_start]La solución es añadir CPs o ajustar otras cargas de trabajo pesadas en CP[cite: 207, 211, 542].</li>
+                    [cite_start]<li><strong><code>% CPU DLY</code> bajo, <code>% IIPCP</code> alto:</strong> Cuello de botella clásico de zIIP[cite: 212]. [cite_start]La solución es añadir zIIPs[cite: 212, 523, 543].</li>
+                    [cite_start]<li><strong><code>% CPU DLY</code> alto, <code>% IIPCP</code> alto:</strong> El sistema está completamente saturado[cite: 213]. [cite_start]Este es un déficit crítico de capacidad que requiere la adición de ambos, CPs y zIIPs[cite: 214].</li>
+                    [cite_start]<li><strong><code>% CPU DLY</code> bajo, <code>% IIPCP</code> bajo:</strong> El problema de rendimiento no está relacionado con la contención de procesadores en z/OS[cite: 215]. [cite_start]La investigación debe centrarse en la latencia de la red, el rendimiento del endpoint remoto o la lógica de la aplicación[cite: 216].</li>
                 </ul>
-                <p>Un valor de <code>% IIPCP</code> del 100% significa que un CP completo se está utilizando para trabajo de zIIP. Esto se puede traducir directamente en un impacto de costo de MLC, proporcionando una poderosa justificación financiera para adquirir motores zIIP adicionales.</p>
+                [cite_start]<p>Un valor de <code>% IIPCP</code> del 100% significa que un CP completo se está utilizando para trabajo de zIIP[cite: 120, 203]. [cite_start]Esto se puede traducir directamente en un impacto de costo de MLC, proporcionando una poderosa justificación financiera para adquirir motores zIIP adicionales[cite: 204, 256].</p>
             </section>
 
             <section id="section-6">
                 <h2>Sección 6: Conclusión y Resumen de Hallazgos</h2>
-                <p>El rendimiento de z/OS Connect está intrínsecamente ligado a la gestión eficaz de los procesadores CP y zIIP. La arquitectura, impulsada por consideraciones económicas, ofrece un enorme potencial para procesar cargas de trabajo de modernización de manera rentable. Sin embargo, este modelo introduce un riesgo crítico: la saturación de los procesadores zIIP y la contención de los CPs.</p>
-                <p>El análisis ha demostrado que la carga de trabajo de z/OS Connect es una amalgama de tareas vinculadas a CP (E/S de red, seguridad) y tareas elegibles para zIIP (transformación JSON). La escasez en cualquiera de los procesadores crea un efecto dominó:</p>
+                [cite_start]<p>El rendimiento de z/OS Connect está intrínsecamente ligado a la gestión eficaz de los procesadores CP y zIIP[cite: 219, 436]. [cite_start]La arquitectura, impulsada por consideraciones económicas, ofrece un enorme potencial para procesar cargas de trabajo de modernización de manera rentable[cite: 437]. [cite_start]Sin embargo, este modelo introduce un riesgo crítico: la saturación de los procesadores zIIP y la contención de los CPs[cite: 224, 438].</p>
+                [cite_start]<p>El análisis ha demostrado que la carga de trabajo de z/OS Connect es una amalgama de tareas vinculadas a CP (E/S de red, seguridad) y tareas elegibles para zIIP (transformación JSON)[cite: 222]. La escasez en cualquiera de los procesadores crea un efecto dominó:</p>
                 <ul>
-                    <li>La <strong>escasez de CP</strong> retrasa las tareas de red y seguridad, aumentando el tiempo total de la solicitud.</li>
-                    <li>Esto aumenta la concurrencia, lo que lleva a la <strong>saturación de zIIP</strong>.</li>
-                    <li>La saturación de zIIP causa un <strong>desbordamiento (spillover)</strong> de trabajo Java hacia los CPs.</li>
-                    <li>Este desbordamiento <strong>exacerba la contención de CP</strong>, degradando el rendimiento de todo el sistema y aumentando los costos de licenciamiento.</li>
+                    [cite_start]<li>La <strong>escasez de CP</strong> retrasa las tareas de red y seguridad, aumentando el tiempo total de la solicitud[cite: 224].</li>
+                    [cite_start]<li>Esto aumenta la concurrencia, lo que lleva a la <strong>saturación de zIIP</strong>[cite: 224].</li>
+                    [cite_start]<li>La saturación de zIIP causa un <strong>desbordamiento (spillover)</strong> de trabajo Java hacia los CPs[cite: 225, 441].</li>
+                    [cite_start]<li>Este desbordamiento <strong>exacerba la contención de CP</strong>, degradando el rendimiento de todo el sistema y aumentando los costos de licenciamiento[cite: 225, 441].</li>
                 </ul>
-                <p>La clave del éxito reside en una gestión proactiva y basada en datos. Es imperativo implementar un marco de monitoreo que correlacione los datos de RMF (SMF 70 y 72) con los registros de aplicación (SMF 123). La métrica <code>IIPCP</code> (o <code>% zIIP en CP</code>) emerge como el indicador principal más crucial de la inminente saturación de zIIP y la degradación del rendimiento.</p>
+                [cite_start]<p>La clave del éxito reside en una gestión proactiva y basada en datos[cite: 226, 442]. [cite_start]Es imperativo implementar un marco de monitoreo que correlacione los datos de RMF (SMF 70 y 72) con los registros de aplicación (SMF 123)[cite: 227, 443]. [cite_start]La métrica <code>IIPCP</code> (o <code>% zIIP en CP</code>) emerge como el indicador principal más crucial de la inminente saturación de zIIP y la degradación del rendimiento[cite: 228, 444].</p>
             </section>
 
             <section id="section-7">
                 <h2>Sección 7: Lista de Verificación Accionable</h2>
-                <p>Utilice esta lista de verificación como guía estratégica para la gestión proactiva del rendimiento de z/OS Connect.</p>
+                [cite_start]<p>Utilice esta lista de verificación como guía estratégica para la gestión proactiva del rendimiento de z/OS Connect[cite: 230].</p>
                 
                 <div class="checklist-container">
                     
                     <div class="checklist-category-card">
                         <h3><span class="icon">🔍</span> VALIDAR: Configuración de WLM</h3>
                         <ul class="checklist">
-                            <li><label><input type="checkbox"> Confirmar que <code>zosWlm-1.0</code> está activa en server.xml.</label></li>
-                            <li><label><input type="checkbox"> Asegurar que existan reglas de <code>httpClassification</code> para las cargas de trabajo (ej. <code>/zosConnect/apiRequesters/*</code>).</label></li>
-                            <li><label><input type="checkbox"> Verificar que la política de WLM clasifica correctamente la STC y los enclaves (CB) en clases de servicio apropiadas (usar objetivos de velocidad).</label></li>
-                            <li><label><input type="checkbox"> Verificar que la importancia del SoR (CICS/IMS) es <strong>mayor</strong> que la de z/OS Connect (para flujos de Provider).</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Confirmar que <code>zosWlm-1.0</code> está activa en server.xml[cite: 178, 232].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Asegurar que existan reglas de <code>httpClassification</code> para las cargas de trabajo (ej. <code>/zosConnect/apiRequesters/*</code>)[cite: 179, 233].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Verificar que la política de WLM clasifica correctamente la STC y los enclaves (CB) en clases de servicio apropiadas (usar objetivos de velocidad)[cite: 174, 234].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Verificar que la importancia del SoR (CICS/IMS) es <strong>mayor</strong> que la de z/OS Connect (para flujos de Provider)[cite: 412, 512].</label></li>
                         </ul>
                     </div>
             
                     <div class="checklist-category-card">
                         <h3><span class="icon">📏</span> MEDIR: Establecer Líneas Base</h3>
                         <ul class="checklist">
-                            <li><label><input type="checkbox"> Habilitar registros SMF 123 (V2 para Requester: <code>apiRequesterSmfVersion="2"</code>).</label></li>
-                            <li><label><input type="checkbox"> Recopilar y archivar regularmente datos de RMF (SMF 70, 72) y SMF 123.</label></li>
-                            <li><label><input type="checkbox"> Establecer líneas base para <code>Tiempo en z/OS Connect</code>, <code>% CPU DLY</code> y <code>% IIPCP</code> durante picos.</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Habilitar registros SMF 123 (V2 para Requester: <code>apiRequesterSmfVersion="2"</code>)[cite: 126, 236].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Recopilar y archivar regularmente datos de RMF (SMF 70, 72) y SMF 123[cite: 237, 420].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Establecer líneas base para <code>Tiempo en z/OS Connect</code>, <code>% CPU DLY</code> y <code>% IIPCP</code> durante picos[cite: 146, 238].</label></li>
                         </ul>
                     </div>
                     
                     <div class="checklist-category-card">
                         <h3><span class="icon">🖥️</span> MONITORIZAR: Alertas en Tiempo Real</h3>
                         <ul class="checklist">
-                            <li><label><input type="checkbox"> Utilizar un monitor en tiempo real (RMF III, OMEGAMON for JVM).</label></li>
-                            <li><label><input type="checkbox"> Alertas para <code>% zIIP en CP</code> (Advertencia > 10%, Crítico > 50%).</label></li>
-                            <li><label><input type="checkbox"> Alertas para Tiempo de Respuesta (Crítico > 2x la línea base).</label></li>
-                            <li><label><input type="checkbox"> Alertas para Recuento de Hebras Activas (Advertencia > 80% del máximo).</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Utilizar un monitor en tiempo real (RMF III, OMEGAMON for JVM)[cite: 139, 240, 387].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Configurar alertas para <code>% zIIP en CP</code> (Advertencia > 10%, Crítico > 50%)[cite: 155, 157, 242].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Configurar alertas para Tiempo de Respuesta (Crítico > 2x la línea base)[cite: 159, 243].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Configurar alertas para Recuento de Hebras Activas (Advertencia > 80% del máximo)[cite: 160, 244].</label></li>
                         </ul>
                     </div>
             
                     <div class="checklist-category-card">
                         <h3><span class="icon">🩺</span> DIAGNOSTICAR: Analizar Anomalías</h3>
                         <ul class="checklist">
-                            <li><label><input type="checkbox"> Correlacionar <code>Tiempo en z/OS Connect</code> (SMF 123) con <code>% CPU DLY</code> y <code>% IIPCP</code> (RMF 72).</label></li>
-                            <li><label><input type="checkbox"> Usar la "Matriz de Contención" (Sección 5) para identificar el cuello de botella (CP, zIIP, ambos).</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Correlacionar <code>Tiempo en z/OS Connect</code> (SMF 123) con <code>% CPU DLY</code> y <code>% IIPCP</code> (RMF 72)[cite: 132, 247, 397].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Usar la "Matriz de Contención" (Sección 5) para identificar el cuello de botella (CP, zIIP, ambos)[cite: 209, 248].</label></li>
                         </ul>
                     </div>
             
                     <div class="checklist-category-card">
                         <h3><span class="icon">🛠️</span> AJUSTAR: Optimizar el Entorno</h3>
                         <ul class="checklist">
-                            <li><label><input type="checkbox"> Revisar y optimizar la política de WLM (ver "VALIDAR").</label></li>
-                            <li><label><input type="checkbox"> (Para Requester) Habilitar <code>AsyncIO</code> para Liberty.</label></li>
-                            <li><label><input type="checkbox"> (Para Requester) Revisar parámetros de TCP/IP (<code>DELAYACKS</code>, Búferes).</label></li>
-                            <li><label><input type="checkbox"> (Para Provider) Optimizar payloads de API (excluir campos, usar ODO).</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Revisar y optimizar la política de WLM (ver "VALIDAR")[cite: 170, 250, 509].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> (Para Requester) Habilitar <code>AsyncIO</code> para Liberty[cite: 190, 251].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> (Para Requester) Revisar parámetros de TCP/IP (<code>DELAYACKS</code>, Búferes, Offloading)[cite: 192, 252, 534].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> (Para Provider) Optimizar payloads de API (excluir campos, usar ODO)[cite: 431, 433, 531, 532].</label></li>
                         </ul>
                     </div>
             
                     <div class="checklist-category-card">
                         <h3><span class="icon">📈</span> PLANIFICAR: Impulsar la Capacidad</h3>
                         <ul class="checklist">
-                            <li><label><input type="checkbox"> Usar tendencias históricas de <code>% IIPCP</code> para pronosticar necesidades de zIIP.</label></li>
-                            <li><label><input type="checkbox"> Usar tendencias de <code>% CPU DLY</code> para evaluar la capacidad de CP.</label></li>
-                            <li><label><input type="checkbox"> Traducir <code>% IIPCP</code> en impacto de costo de MLC para justificar la adquisición de hardware.</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Usar tendencias históricas de <code>% IIPCP</code> para pronosticar necesidades de zIIP[cite: 198, 254, 420].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Usar tendencias de <code>% CPU DLY</code> para evaluar la capacidad de CP[cite: 205, 255].</label></li>
+                            [cite_start]<li><label><input type="checkbox"> Traducir <code>% IIPCP</code> en impacto de costo de MLC para justificar la adquisición de hardware[cite: 204, 256].</label></li>
                         </ul>
                     </div>
             
